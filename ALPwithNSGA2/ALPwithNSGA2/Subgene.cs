@@ -15,6 +15,20 @@ namespace ALPwithNSGA2
         private double sunev;
         public int indicatorct;
         public int disct;
+        private double subd;
+
+        public double Subd
+        {
+            get { return subd; }
+            set { subd = value; }
+        }
+        private List<Base> countsub = new List<Base>();
+
+        public List<Base> Countsub
+        {
+            get { return countsub; }
+            set { countsub = value; }
+        }
         public int Indicatorct
         {
             get { return indicatorct; }
@@ -147,21 +161,34 @@ namespace ALPwithNSGA2
 			this.Subpathct = 0;
             dcalc(x, y);
             fcalc(x, y, field);
+            List<Base> countsub = new List<Base>();
+            this.countsub.Add(new Base(config));
 		}
         	public Subgene( Subgene ind,Config config )
 		{
 			this.fitness = ind.Fitness;
 			this.distance = ind.Distance;
             this.indicatorct = ind.indicatorct;
+            this.subd = ind.subd;
 			time = ind.Time;
 			fdis = ind.Fdis;
 			for( int i = 0; i < ind.gene.Count; i++ )
 			{
-				this.gene.Add( new Base( ind.gene[i] ) );
+				this.Gene.Add( new Base( ind.gene[i] ) );
 
 			}
-		
-			
+            for (int i = 0; i < ind.countsub.Count; i++)
+            {
+                this.countsub.Add(new Base(ind.countsub[i]));
+
+            }
+		    for (int i = 0; i < this.ardis.Count(); i++)
+			{
+
+                this.ardis[i].s = ind.ardis[i].s;
+                this.ardis[i].id = ind.ardis[i].id;
+			}
+
             this.subpathct = ind.subpathct;
             this.sunev = ind.Sunev;
 
@@ -169,15 +196,12 @@ namespace ALPwithNSGA2
             public Subgene(Individual ind ,Config config)
             {
                 List<Disid> ardis = new List<Disid>();
+
                 for (int i = 0; i < ind.gene.Count; i++)
 			{
                 this.gene.Add(new Base(ind.gene[i]));
 			}
-                for (int i = 0; i < this.ardis.Count(); i++)
-			{
-
-                this.ardis[i] = new Disid();
-			}
+ 
                 
                 this.fitness = ind.Fitness;
                 this.distance = ind.Distance;
@@ -450,6 +474,35 @@ namespace ALPwithNSGA2
                     ardis.Add(d);//中に入れるんだな
                 }
             }
+                public void subdis(Individual ind,int c) //subgene　Cについての距離の評価をまとめたもの
+                {
+                    subd = 0;//初期化
+                    double d = 0;
+                    for (int i = 0; i < ind.subgene.Count; i++)
+                    {
+                        if (i != c)
+                        {
+                            for (int k = 0; k < ind.subgene[i].countsub.Count; k++)
+			    {
+			 
+			    for (int m = 0; m < this.countsub.Count; m++)
+			    {
+                    d = Math.Sqrt((Math.Pow(ind.subgene[i].countsub[k].basex - this.countsub[m].basex, 2)) + (Math.Pow(ind.subgene[i].countsub[k].basey - this.countsub[m].basey, 2))) + d;
+			    }
+
+                d = d / this.countsub.Count;//一つのsubgeneに関しての距離の平均を求めいている。
+   
+                        
+                }
+                            Disid dist = new Disid();
+
+                            dist.s = d;
+                            dist.id = i;  //Subgene iの評価
+                            ardis.Add(dist);//中に入れるんだな 
+                        }
+                         d = 0;
+                    }
+                }
 
     }
 }

@@ -10,7 +10,7 @@ namespace ALPwithNSGA2
 	{
 		static void Main( string[] args )
 		{
-			int seed = 5000;
+			int seed = 10;
 			Field field= new Field2();
             Field nextfid = new Field1();
             Config config = new Config(seed);

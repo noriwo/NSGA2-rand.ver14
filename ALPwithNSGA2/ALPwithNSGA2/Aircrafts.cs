@@ -50,7 +50,7 @@ namespace ALPwithNSGA2
                         air[i].WritePop(j);
                         Console.WriteLine("now {0} generation", j);
                     }
-                    if (j % 50 == 0)
+                    if (j % 1000 == 0)
                     {
                         //air[i].WritePop( z );
                         air[i].SelectPath();
@@ -375,10 +375,23 @@ namespace ALPwithNSGA2
                     {
                         for (int n = 0; n < air[j].Path[i].subgene[m].gene.Count; n++)
                         {
-                            sw.Write("sub[" + n + "]Xgrid" + "," + air[j].Path[i].subgene[m].gene[n].basex + "," + "Ygrid," + air[j].Path[i].subgene[m].gene[n].basey + "," + air[j].Path[i].subgene[m].Distance + "," + "indicator" + "," + air[j].Path[i].subgene[m].Indicatorct + ",");
+                            sw.Write("sub[" + n + "]Xgrid.Ygrid" + "," + air[j].Path[i].subgene[m].gene[n].basex + ","+ air[j].Path[i].subgene[m].gene[n].basey + "," );
                         }
                         sw.WriteLine();
+                        sw.Write("Distance" + "," + "indicator" + "," + "novelty");
+                        sw.WriteLine();
+                        sw.Write(air[j].Path[i].subgene[m].Distance + ","  + air[j].Path[i].subgene[m].Indicatorct  + "," + air[j].Path[i].subgene[m].Subd + ",");
+                        sw.WriteLine();
                     }
+                    sw.WriteLine();
+                    for (int m = 0; m < air[j].path[i].subgene.Count; m++)
+                    {
+                        for (int g = 0; g < air[j].path[i].subgene[m].Countsub.Count; g++)
+                        {
+                            sw.WriteLine("subgene[x][y]" + "," + air[j].path[i].subgene[m].Countsub[g].basex + "," + air[j].path[i].subgene[m].Countsub[g].basey);
+                         
+                        }
+                       }
 				}
 			}
 		}

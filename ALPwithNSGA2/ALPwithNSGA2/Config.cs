@@ -8,11 +8,11 @@ namespace ALPwithNSGA2
 {
 	class Config
 	{
-		public static int trial =500;
+		public static int trial =1000;
         private static int subpath = 20;
         private static int follow = 0;
         private static int first = 1;
-        int nearct = 8;
+        int nearct = 3;
         int indct = 5;
 
         public int Indct

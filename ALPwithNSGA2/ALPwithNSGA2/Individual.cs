@@ -260,6 +260,7 @@ namespace ALPwithNSGA2
                         this.subgene[subgene.Count - 1].fcalc(Inix, Iniy, field);
                         this.subgene[subgene.Count - 1].dcalc(x, y);
                         this.Subsum = this.Subsum + 1;
+                        this.subgene[subgene.Count - 1].Countsub.Insert(0, b);//新しい計算法
                         if (this.subgene[subgene.Count() - 1].fitness == 0)
                         {
                             this.subpathct = this.subpathct + 1;
@@ -325,6 +326,7 @@ namespace ALPwithNSGA2
                             this.subgene[subgene.Count - 1].dcalc(x, y);
                             this.subgene[subgene.Count - 1].fcalc(Inix, Iniy, field);
                             this.subsum = subsum + 1;
+                            this.subgene[subgene.Count - 1].Countsub.Insert(0, b);//新しい計算法
                             if (this.subgene[subgene.Count - 1].fitness == 0)
                             {
                                 this.subpathct = this.subpathct + 1;
@@ -382,14 +384,17 @@ namespace ALPwithNSGA2
                             }
                         } while (true);
                         this.subgene.Add(new Subgene(ind, config));
+     
                         Base b = new Base(config);
                         b.basex = p;
                         b.basey = q;
                         //this.subgene[m].gene.Add(b);
+                    
                         this.subgene[subgene.Count() - 1].gene.Add(b);
                         this.subgene[subgene.Count() - 1].dcalc(x, y);
                         this.subgene[subgene.Count() - 1].fcalc(Inix, Iniy, field);
                         this.subsum = subsum + 1;
+                        this.subgene[subgene.Count - 1].Countsub.Insert(0, b);//新しい計算法
                         if (this.subgene[subgene.Count() - 1].fitness == 0)
                         {
                             this.subpathct = this.subpathct + 1;
@@ -423,6 +428,12 @@ namespace ALPwithNSGA2
                     this.subgene[v].id = ct; 
                 }
              */
+            for (int c = 0; c < subgene.Count(); c++)
+            {
+                this.subgene[c].ardisclear(this, c);
+                this.subgene[c].subdis(this,c);//subgene[c]の評価をチェック
+            }
+            /*
             this.Subpathct = this.subpathct;
             for (int m = 0; m < subgene.Count(); m++)
             {
@@ -460,12 +471,32 @@ namespace ALPwithNSGA2
               
         
             }
+             * */
+            this.subev = 0;
+            for (int p = 0; p < subgene.Count(); p++)
+            {
+                 
+                this.subgene[p].Ardis = this.subgene[p].Ardis.OrderBy(n => n.s).ToList();
+
+                for (int m = 0; m < config.Nearct; m++)
+                {
+                    if (this.subgene[p].Ardis.Count == m)
+                    {
+                        break;
+
+                    }
+                    this.subev = this.subgene[p].Ardis[m].S + this.subev;
+                    this.subgene[p].Subd = this.subgene[p].Subd + this.subgene[p].Ardis[m].S;
+                    this.subgene[subgene[p].Ardis[m].Id].Indicatorct = this.subgene[subgene[p].Ardis[m].Id].Indicatorct + 1;
+                }
+            }
             this.subev = this.subev / (config.Nearct*subgene.Count());
-           this.subgene= this.subgene.OrderBy(n => n.indicatorct).ToList();
-          
+           //this.subgene= this.subgene.OrderByDescending(n => n.indicatorct).ToList();
+            this.subgene = this.subgene.OrderByDescending(n => n.Subd).ToList();
             //this.sunev = (double)((double)this.subpathct / (double)this.subsum);
             //for (int f = 0; f < subgene.Count; f++)
             // {
+
             //   this.sunev = this.sunev + this.Subev;   
             //}
             this.sunev = this.subev;
